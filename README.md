@@ -1,4 +1,4 @@
-![misaki logo](https://github.com/liquidz/misaki/raw/master/sample/public/img/logo.png)
+![misaki logo](https://github.com/liquidz/misaki/raw/master/samples/blog/public/img/logo.png)
 
 misaki-markdown is one of [misaki](https://github.com/liquidz/misaki)'s compiler plugin.
 
