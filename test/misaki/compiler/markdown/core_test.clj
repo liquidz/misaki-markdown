@@ -100,6 +100,37 @@
       "hello < world"
       "<span>hello")))
 
+;;; render*
+(deftest* render*-test
+  (testing "markdown template without markdown? option"
+    (is (= "<h1>hello world</h1>"
+           (#'misaki.compiler.markdown.template/render*
+               ["#hello {{msg}}" {}] {:msg "world"}))))
+
+  (testing "html template without markdown? option"
+    (is (= "<h1>hello world</h1>"
+           (#'misaki.compiler.markdown.template/render*
+               ["<h1>hello {{msg}}</h1>" {}] {:msg "world"}))))
+
+  (testing "markdown template with TRUE markdown? option"
+    (is (= "<h1>hello world</h1>"
+           (#'misaki.compiler.markdown.template/render*
+               ["#hello {{msg}}" {:markdown? "true"}] {:msg "world"}))))
+
+  (testing "html template with TRUE markdown? option"
+    (is (= "<p><h1>hello world</h1></p>"
+           (#'misaki.compiler.markdown.template/render*
+               ["<h1>hello {{msg}}</h1>" {:markdown? "true"}] {:msg "world"}))))
+
+  (testing "markdown template with FALSE markdown? option"
+    (is (= "#hello world"
+           (#'misaki.compiler.markdown.template/render*
+               ["#hello {{msg}}" {:markdown? "false"}] {:msg "world"}))))
+
+  (testing "html template with FALSE markdown? option"
+    (is (= "<h1>hello world</h1>"
+           (#'misaki.compiler.markdown.template/render*
+               ["<h1>hello {{msg}}</h1>" {:markdown? "false"}] {:msg "world"})))))
 
 ;;; render-template
 (deftest* render-template-test
