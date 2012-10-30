@@ -10,9 +10,10 @@
     [misaki.server  :as srv]
     [clojure.string :as str]))
 
+;; ## Default Values
+
 ;; Default post entry max
 (def POST_ENTRY_MAX 10)
-
 
 ; =layout-file?
 (defn layout-file?
@@ -58,15 +59,18 @@
 
 
 ;; ## Compiler Functions
+;; See document "[Develop Compiler](http://liquidz.github.com/misaki/toc/07-develop-compiler.html)"
 
 ; =-extension
 (defn -extension
+  "Specifying file extensions function called by misaki.core."
   []
   (list :htm :html :md))
 
 
 ; =-config
 (defn -config
+  "Custom configuration function called by misaki.core."
   [{:keys [template-dir] :as config}]
   (assoc config
          :layout-dir (path template-dir (:layout-dir config))
@@ -74,6 +78,7 @@
 
 ; =-compile
 (defn -compile
+  "Compile function called by misaki.core."
   [config file]
   (binding [*config* config]
     (if (layout-file? file)

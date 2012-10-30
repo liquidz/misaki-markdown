@@ -3039,7 +3039,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [misaki.core    :as msk]
     [misaki.config  :as cnf]
     [misaki.server  :as srv]
-    [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>Default post entry max</p>
+    [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><h2>Default Values</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Default post entry max</p>
 </td><td class="codes"><pre class="brush: clojure">(def POST_ENTRY_MAX 10)</pre></td></tr><tr><td class="docs"><p>Check whether specified file is layout file or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn layout-file?
   [file]
@@ -3071,15 +3072,17 @@ net.brehaut.ClojureTools = (function (SH) {
             :date-xml-schema (date-&gt;xml-schema date)
             :posts     (take (:post-entry-max *config*) posts)
             :all-posts posts})))</pre></td></tr><tr><td class="docs"><h2>Compiler Functions</h2>
-</td><td class="codes"></td></tr><tr><td class="docs">
+
+<p>See document "<a href="http://liquidz.github.com/misaki/toc/07-develop-compiler.html">Develop Compiler</a>"</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Specifying file extensions function called by misaki.core.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn -extension
   []
-  (list :htm :html :md))</pre></td></tr><tr><td class="docs">
+  (list :htm :html :md))</pre></td></tr><tr><td class="docs"><p>Custom configuration function called by misaki.core.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn -config
   [{:keys [template-dir] :as config}]
   (assoc config
          :layout-dir (path template-dir (:layout-dir config))
-         :post-entry-max (:post-entry-max config POST_ENTRY_MAX)))</pre></td></tr><tr><td class="docs">
+         :post-entry-max (:post-entry-max config POST_ENTRY_MAX)))</pre></td></tr><tr><td class="docs"><p>Compile function called by misaki.core.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn -compile
   [config file]
   (binding [*config* config]
