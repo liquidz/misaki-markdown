@@ -91,7 +91,9 @@
   (testing "HTML template should be true"
     (are [x] (true? (html-template? x))
       "<span>hello</span>"
-      "<p>hello <span>world</span></p>"))
+      "<span>\nhello\n</span>"
+      "<p>hello <span>world</span></p>"
+      ))
 
   (testing "Non HTML template should be false"
     (are [x] (false? (html-template? x))
@@ -222,10 +224,6 @@
           "<p>baz</p>" (:content a)
           "<p>bar</p>" (:content b)
           "<p>foo</p>" (:content c))))))
-
-
-
-
 
 (deftest* -config-test
   (let [config (get-config)]

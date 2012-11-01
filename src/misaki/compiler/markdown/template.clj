@@ -52,7 +52,7 @@
 (defn html-template?
   "Check whether slurped data is HTML or not."
   [slurped-data]
-  (not (nil? (re-seq #"<.+?>.*</.+?>" slurped-data))))
+  (not (nil? (re-seq #"(?s)<.+?>.*</.+?>" slurped-data))))
 
 ; =render*
 ;   opt( ) html(T) => html
