@@ -2,10 +2,8 @@
   (:use clojure.test
         [misaki.compiler.markdown core template]
         misaki.tester
-        [misaki.config :only [*config*]]
-        )
-  (:require [clojure.string  :as str]
-            ))
+        [misaki.config :only [*config*]])
+  (:require [clojure.string  :as str]))
 
 ; set base directory which include _config.clj
 ; default testing base directory is "test"
@@ -50,15 +48,38 @@
     (let [body (slurp (template-file "option/without_option.html"))]
       (is (= "hello" (str/trim (remove-option-lines body)))))))
 
-
 ;;; load-layout
 (deftest* load-layout-test
   (binding [*config* (get-config)]
     (is (= "hello {{&content}}"
            (str/trim (remove-option-lines (load-layout "without_layout")))))))
 
+;;; replace-code-block
+(deftest* replace-code-block-test
+  (testing "without language specified"
+    (are [x y] (= x (replace-code-block y))
+      "<pre><code>hello</code></pre>"
+      "```\nhello\n```"
+      "<pre><code>hello</code></pre>"
+      "```\n\nhello\n\n```"
+      "<pre><code>he\nll\no</code></pre>"
+      "```\nhe\nll\no\n```"))
 
+  (testing "with language specified"
+    (are [x y] (= x (replace-code-block y))
+      "<pre><code class=\"brush: html;\">hello</code></pre>"
+      "```html\nhello\n```"
+      "<pre><code class=\"brush: clojure;\">hello</code></pre>"
+      "```clojure\n\nhello\n\n```"
+      "<pre><code class=\"brush: markdown;\">he\nll\no</code></pre>"
+      "```markdown\nhe\nll\no\n```"))
 
+  (testing "code should be encoded"
+    (are [x y] (= x (replace-code-block y))
+      "<pre><code>&lt;hello&gt;</code></pre>"
+      "```\n<hello>\n```"
+      "<pre><code>&quot;hello&quot;</code></pre>"
+      "```\n\"hello\"\n```")))
 
 ;;; get-tempaltes
 (deftest* get-templates-test
@@ -106,33 +127,39 @@
 (deftest* render*-test
   (testing "markdown template without markdown? option"
     (is (= "<h1>hello world</h1>"
-           (#'misaki.compiler.markdown.template/render*
-               ["#hello {{msg}}" {}] {:msg "world"}))))
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["#hello {{msg}}" {}] {:msg "world"})))))
 
   (testing "html template without markdown? option"
     (is (= "<h1>hello world</h1>"
-           (#'misaki.compiler.markdown.template/render*
-               ["<h1>hello {{msg}}</h1>" {}] {:msg "world"}))))
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["<h1>hello {{msg}}</h1>" {}] {:msg "world"})))))
 
   (testing "markdown template with TRUE markdown? option"
     (is (= "<h1>hello world</h1>"
-           (#'misaki.compiler.markdown.template/render*
-               ["#hello {{msg}}" {:markdown? "true"}] {:msg "world"}))))
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["#hello {{msg}}" {:markdown? "true"}] {:msg "world"})))))
 
   (testing "html template with TRUE markdown? option"
-    (is (= "<p><h1>hello world</h1></p>"
-           (#'misaki.compiler.markdown.template/render*
-               ["<h1>hello {{msg}}</h1>" {:markdown? "true"}] {:msg "world"}))))
+    (is (= "<h1>hello world</h1>"
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["<h1>hello {{msg}}</h1>" {:markdown? "true"}] {:msg "world"})))))
 
   (testing "markdown template with FALSE markdown? option"
     (is (= "#hello world"
-           (#'misaki.compiler.markdown.template/render*
-               ["#hello {{msg}}" {:markdown? "false"}] {:msg "world"}))))
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["#hello {{msg}}" {:markdown? "false"}] {:msg "world"})))))
 
   (testing "html template with FALSE markdown? option"
     (is (= "<h1>hello world</h1>"
-           (#'misaki.compiler.markdown.template/render*
-               ["<h1>hello {{msg}}</h1>" {:markdown? "false"}] {:msg "world"})))))
+           (str/trim
+             (#'misaki.compiler.markdown.template/render*
+                 ["<h1>hello {{msg}}</h1>" {:markdown? "false"}] {:msg "world"}))))))
 
 ;;; render-template
 (deftest* render-template-test
@@ -221,16 +248,18 @@
           "/2000-01/foo.html" (:url c)
 
 
-          "<p>baz</p>" (:content a)
-          "<p>bar</p>" (:content b)
-          "<p>foo</p>" (:content c))))))
+          "<p>baz</p>" (str/trim (:content a))
+          "<p>bar</p>" (str/trim (:content b))
+          "<p>foo</p>" (str/trim (:content c)))))))
 
+;;; -config
 (deftest* -config-test
   (let [config (get-config)]
     (are [x y] (= x y)
       "test/template/_layouts/" (:layout-dir config)
       10                        (:post-entry-max config))))
 
+;;; -compile
 (deftest* -compile-test
   (testing "single html template"
     (let [in  (template-file "single.html")
@@ -238,7 +267,7 @@
       (is (test-compile in))
       (are [x y] (= x y)
         true (.exists out)
-        "<h1>hello</h1><b>world</b>" (str/replace (slurp out) #"[\r\n]" ""))
+        "<h1>hello</h1><p><strong>world</strong></p>" (str/replace (slurp out) #"[\r\n]" ""))
       (.delete out)))
 
   (testing "single htm template"

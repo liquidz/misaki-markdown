@@ -4,9 +4,13 @@
     [misaki.util file date string]
     [misaki.config    :only [*config*]]
     [clostache.parser :only [render]]
-    [markdown         :only [md-to-html-string]])
+    ;[markdown         :only [md-to-html-string]]
+    )
   (:require
-    [clojure.string :as str]))
+    [clojure.string :as str])
+  (:import
+    [com.github.rjeschke.txtmark Processor])
+  )
 
 
 ; =parse-option-line
@@ -31,6 +35,27 @@
   (let [lines  (map str/trim (str/split-lines slurped-data))]
     (str/join "\n" (remove #(parse-option-line %) lines))))
 
+; =remove-useless-html-lines
+(defn remove-useless-html-lines
+  "Remove useless empty lines in HTML."
+  [s]
+  (-> s
+    (str/replace #"(<[^/]+?>)[\r\n]*" (fn [[_ tag]] tag))
+    (str/replace #"[\r\n]*(</.+?>)" (fn [[_ tag]] tag))))
+
+
+; =replace-code-block
+(defn replace-code-block
+  "Replace code block to HTML based on SyntaxHighlighter."
+  [s]
+  (str/replace
+    s #"(?s)```([^\r\n]*)\n+(.+?)[\r\n]*```"
+    (fn [[_ brush codes]]
+      (let [klass (if-not (str/blank? brush)
+                    (str " class=\"brush: " brush ";\""))]
+        (str "<pre><code" klass ">" (escape-string codes) "</code></pre>")))))
+
+
 ; =load-layout
 (defn load-layout
   "Load layout file and return slurped data."
@@ -49,6 +74,7 @@
                    (split (load-layout layout-name))))
                (split slurped-data)))))
 
+; =html-template?
 (defn html-template?
   "Check whether slurped data is HTML or not."
   [slurped-data]
@@ -62,14 +88,15 @@
 ;   opt(F) html(T) => html
 ;   opt(F) html(F) => html
 (defn- render* [[body option :as template] data]
-  (let [render-result (render body data)
+  (let [body (replace-code-block body)
+        render-result (render body data)
         md-flag (:markdown? option "noopt")]
-    (case md-flag
-      "true"  (md-to-html-string render-result)
-      "false" render-result
-      "noopt" (if (html-template? body)
-                render-result
-                (md-to-html-string render-result)))))
+      (case md-flag
+        "true"  (Processor/process render-result)
+        "false" render-result
+        "noopt" (if (html-template? body)
+                  render-result
+                  (Processor/process render-result)))))
 
 ; =render-template
 (defn render-template
@@ -80,14 +107,17 @@
         htmls (map first tmpls)
         data  (merge base-data (reduce merge (reverse (map second tmpls))))]
 
-    (if allow-layout?
-      (reduce
-        (fn [result-html tmpl-html]
-          (if tmpl-html
-            (render* tmpl-html (merge data {:content result-html}))
-            result-html))
-        (render* (first tmpls) data)
-        (rest tmpls))
-      (render* (first tmpls) data))))
+   ; (remove-useless-html-lines
+      (if allow-layout?
+        (reduce
+          (fn [result-html tmpl-html]
+            (if tmpl-html
+              (render* tmpl-html (merge data {:content (str/trim result-html)}))
+              result-html))
+          (render* (first tmpls) data)
+          (rest tmpls))
+        (render* (first tmpls) data))
+   ;   )
+    ))
 
 
