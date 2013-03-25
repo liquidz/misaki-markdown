@@ -1,13 +1,13 @@
 (ns misaki.compiler.markdown.core
   "Markdown Compiler for Misaki"
-  (:use
-    [misaki.compiler.markdown template]
-    [misaki.util file date string]
-    [misaki.config    :only [*config*]])
   (:require
-    [misaki.core    :as msk]
-    [misaki.config  :as cnf]
-    [misaki.server  :as srv]
+    [misaki.compiler.markdown.template :refer :all]
+    [misaki.util [file   :refer :all]
+                 [date   :refer :all]
+                 [string :refer :all]]
+    [misaki [config :refer [*config*] :as cnf]
+            [core   :as msk]
+            [server :as srv]]
     [clojure.string :as str]))
 
 ;; ## Default Values

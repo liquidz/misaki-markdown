@@ -1,16 +1,14 @@
 (ns misaki.compiler.markdown.template
   "Markdown Template Parser for Misaki"
-  (:use
-    [misaki.util file date string]
-    [misaki.config    :only [*config*]]
-    [clostache.parser :only [render]]
-    ;[markdown         :only [md-to-html-string]]
-    )
   (:require
-    [clojure.string :as str])
+    [misaki.util [file   :refer :all]
+                 [date   :refer :all]
+                 [string :refer :all]]
+    [misaki.config    :refer [*config*]]
+    [clostache.parser :refer [render]]
+    [clojure.string   :as str])
   (:import
-    [com.github.rjeschke.txtmark Processor])
-  )
+    [com.github.rjeschke.txtmark Processor]))
 
 
 ; =parse-option-line
