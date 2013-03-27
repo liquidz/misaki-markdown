@@ -11,6 +11,9 @@
     [clojure.string :as str]))
 
 ;; ## Default Values
+(def DEFAULT_CODE_REGEXP #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```")
+
+(def DEFAULT_CODE_HTML_FORMAT "<pre><code{{#lang}} class=\"brush: {{lang}};\"{{/lang}}>{{code}}</code></pre>")
 
 ;; Default post entry max
 (def POST_ENTRY_MAX 10)
@@ -68,12 +71,18 @@
   (list :htm :html :md))
 
 
+
+
+
+
 ; =-config
 (defn -config
   "Custom configuration function called by misaki.core."
   [{:keys [template-dir] :as config}]
   (assoc config
          :layout-dir (path template-dir (:layout-dir config))
+         :code-regexp (:code-regexp config DEFAULT_CODE_REGEXP)
+         :code-html-format (:code-html-format config DEFAULT_CODE_HTML_FORMAT)
          :post-entry-max (:post-entry-max config POST_ENTRY_MAX)))
 
 ; =-compile

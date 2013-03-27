@@ -9,16 +9,15 @@
 ; default testing base directory is "test"
 (set-base-dir! "test/")
 
-(deftest* layout-file?-test
+(defcompilertest layout-file?-test
   (let [a (template-file "_layouts/without_layout.html")
         b (template-file "single.html")]
     (is (true?  (layout-file? a)))
     (is (false? (layout-file? b)))))
 
 
-
 ;;; get-template-option
-(deftest* get-template-option-test
+(defcompilertest get-template-option-test
   (testing "with option"
     (let [data   (slurp (template-file "option/with_option.html"))
           option (get-template-option data)]
@@ -39,7 +38,7 @@
 
 
 ;;; remove-option-lines
-(deftest* remove-option-lines-test
+(defcompilertest remove-option-lines-test
   (testing "with option"
     (let [body (slurp (template-file "option/with_option.html"))]
       (is (= "hello" (str/trim (remove-option-lines body))))))
@@ -55,66 +54,64 @@
            (str/trim (remove-option-lines (load-layout "without_layout")))))))
 
 ;;; replace-code-block
-(deftest* replace-code-block-test
-  (testing "without language specified"
-    (are [x y] (= x (replace-code-block y))
-      "<pre><code>hello</code></pre>"
-      "```\nhello\n```"
-      "<pre><code>hello</code></pre>"
-      "```\n\nhello\n\n```"
-      "<pre><code>he\nll\no</code></pre>"
-      "```\nhe\nll\no\n```"))
-
-  (testing "with language specified"
-    (are [x y] (= x (replace-code-block y))
-      "<pre><code class=\"brush: html;\">hello</code></pre>"
-      "```html\nhello\n```"
-      "<pre><code class=\"brush: clojure;\">hello</code></pre>"
-      "```clojure\n\nhello\n\n```"
-      "<pre><code class=\"brush: markdown;\">he\nll\no</code></pre>"
-      "```markdown\nhe\nll\no\n```"))
-
-  (testing "code should be encoded"
-    (are [x y] (= x (replace-code-block y))
-      "<pre><code>&lt;hello&gt;</code></pre>"
-      "```\n<hello>\n```"
-      "<pre><code>&quot;hello&quot;</code></pre>"
-      "```\n\"hello\"\n```")))
+;(deftest* replace-code-block-test
+;  (testing "without language specified"
+;    (are [x y] (= x (replace-code-block y))
+;      "<pre><code>hello</code></pre>"
+;      "```\nhello\n```"
+;      "<pre><code>hello</code></pre>"
+;      "```\n\nhello\n\n```"
+;      "<pre><code>he\nll\no</code></pre>"
+;      "```\nhe\nll\no\n```"))
+;
+;  (testing "with language specified"
+;    (are [x y] (= x (replace-code-block y))
+;      "<pre><code class=\"brush: html;\">hello</code></pre>"
+;      "```html\nhello\n```"
+;      "<pre><code class=\"brush: clojure;\">hello</code></pre>"
+;      "```clojure\n\nhello\n\n```"
+;      "<pre><code class=\"brush: markdown;\">he\nll\no</code></pre>"
+;      "```markdown\nhe\nll\no\n```"))
+;
+;  (testing "code should be encoded"
+;    (are [x y] (= x (replace-code-block y))
+;      "<pre><code>&lt;hello&gt;</code></pre>"
+;      "```\n<hello>\n```"
+;      "<pre><code>&quot;hello&quot;</code></pre>"
+;      "```\n\"hello\"\n```")))
 
 ;;; get-tempaltes
-(deftest* get-templates-test
-  (binding [*config* (get-config)]
-    (testing "single layout"
-      (let [data  (slurp (template-file "layout/single_layout.html"))
-            tmpls (get-templates data)]
-        (are [x y] (= x y)
-          2 (count tmpls)
-          "world" (-> tmpls first first str/trim)
-          "hello {{&content}}" (-> tmpls second first str/trim)
-          "world" (-> tmpls first  second :title)
-          "hello" (-> tmpls second second :title))))
+(defcompilertest get-templates-test
+  (testing "single layout"
+    (let [data  (slurp (template-file "layout/single_layout.html"))
+          tmpls (get-templates data)]
+      (are [x y] (= x y)
+        2 (count tmpls)
+        "world" (-> tmpls first first str/trim)
+        "hello {{&content}}" (-> tmpls second first str/trim)
+        "world" (-> tmpls first  second :title)
+        "hello" (-> tmpls second second :title))))
 
-    (testing "multi layout"
-      (let [data  (slurp (template-file "layout/multi_layout.html"))
-            tmpls (get-templates data)]
-        (are [x y] (= x y)
-          3 (count tmpls)
-          "foo" (-> tmpls first first str/trim)
-          "baz {{&content}}" (-> tmpls second first str/trim)
-          "hello {{&content}}" (-> tmpls (nth 2) first str/trim)
-          "foo"   (-> tmpls first  second :title)
-          "baz"   (-> tmpls second second :title)
-          "hello" (-> tmpls (nth 2) second :title))))))
+  (testing "multi layout"
+    (let [data  (slurp (template-file "layout/multi_layout.html"))
+          tmpls (get-templates data)]
+      (are [x y] (= x y)
+        3 (count tmpls)
+        "foo" (-> tmpls first first str/trim)
+        "baz {{&content}}" (-> tmpls second first str/trim)
+        "hello {{&content}}" (-> tmpls (nth 2) first str/trim)
+        "foo"   (-> tmpls first  second :title)
+        "baz"   (-> tmpls second second :title)
+        "hello" (-> tmpls (nth 2) second :title)))))
 
 
 ;;; html-template?
-(deftest* html-template?-test
+(defcompilertest html-template?-test
   (testing "HTML template should be true"
     (are [x] (true? (html-template? x))
       "<span>hello</span>"
       "<span>\nhello\n</span>"
-      "<p>hello <span>world</span></p>"
-      ))
+      "<p>hello <span>world</span></p>"))
 
   (testing "Non HTML template should be false"
     (are [x] (false? (html-template? x))
@@ -124,7 +121,7 @@
       "<span>hello")))
 
 ;;; render*
-(deftest* render*-test
+(defcompilertest render*-test
   (testing "markdown template without markdown? option"
     (is (= "<h1>hello world</h1>"
            (str/trim
@@ -162,95 +159,93 @@
                  ["<h1>hello {{msg}}</h1>" {:markdown? "false"}] {:msg "world"}))))))
 
 ;;; render-template
-(deftest* render-template-test
-  (binding [*config* (get-config)]
-    (testing "with layout, no variable"
-      (let [file (template-file "layout/single_layout.html")]
-        (is (= "<p>hello <p>world</p></p>"
-               (str/trim (render-template file {}))))))
+(defcompilertest render-template-test
+  (testing "with layout, no variable"
+    (let [file (template-file "layout/single_layout.html")]
+      (is (= "<p>hello <p>world</p></p>"
+             (str/trim (render-template file {}))))))
 
-    (testing "with layout, no variable, not allow layout"
-      (let [file (template-file "layout/single_layout.html")]
-        (is (= "<p>world</p>"
-               (str/trim (render-template file {} :allow-layout? false))))))
+  (testing "with layout, no variable, not allow layout"
+    (let [file (template-file "layout/single_layout.html")]
+      (is (= "<p>world</p>"
+             (str/trim (render-template file {} :allow-layout? false))))))
 
-    (testing "with self variable"
-      (let [file (template-file "layout/layout_with_self_var.html")]
-        (is (= "<p>hello <p>neko world</p></p>"
-               (str/trim (render-template file {}))))
-        (is (= "<p>hello <p>neko world inu</p></p>"
-               (str/trim (render-template file {:msg " inu"}))))))
+  (testing "with self variable"
+    (let [file (template-file "layout/layout_with_self_var.html")]
+      (is (= "<p>hello <p>neko world</p></p>"
+             (str/trim (render-template file {}))))
+      (is (= "<p>hello <p>neko world inu</p></p>"
+             (str/trim (render-template file {:msg " inu"}))))))
 
-    (testing "with self variable, not allow layout"
-      (let [file (template-file "layout/layout_with_self_var.html")]
-        (is (= "<p>neko world</p>"
-               (str/trim (render-template file {} :allow-layout? false))))))
+  (testing "with self variable, not allow layout"
+    (let [file (template-file "layout/layout_with_self_var.html")]
+      (is (= "<p>neko world</p>"
+             (str/trim (render-template file {} :allow-layout? false))))))
 
-    (testing "with layout variable"
-      (let [file (template-file "layout/layout_with_layout_var.html")]
-        (is (= "<p>hello <p>hello world</p></p>"
-               (str/trim (render-template file {}))))
-        (is (= "<p>hello <p>hello world inu</p></p>"
-               (str/trim (render-template file {:msg " inu"}))))))
+  (testing "with layout variable"
+    (let [file (template-file "layout/layout_with_layout_var.html")]
+      (is (= "<p>hello <p>hello world</p></p>"
+             (str/trim (render-template file {}))))
+      (is (= "<p>hello <p>hello world inu</p></p>"
+             (str/trim (render-template file {:msg " inu"}))))))
 
-    (testing "with layout variable, not allow layout"
-      (let [file (template-file "layout/layout_with_layout_var.html")]
-        (is (= "<p>hello world</p>"
-               (str/trim (render-template file {} :allow-layout? false))))))
+  (testing "with layout variable, not allow layout"
+    (let [file (template-file "layout/layout_with_layout_var.html")]
+      (is (= "<p>hello world</p>"
+             (str/trim (render-template file {} :allow-layout? false))))))
 
-    (testing "html template (:markdown? option is false)"
-      (let [file (template-file "html/self_html.html")]
-        (is (= "<p>hello world</p>"
-               (str/trim (render-template file {}))))))
+  (testing "html template (:markdown? option is false)"
+    (let [file (template-file "html/self_html.html")]
+      (is (= "<p>hello world</p>"
+             (str/trim (render-template file {}))))))
 
-    (testing "html template (without :markdown? option)"
-      (let [file (template-file "html/self_html_without_md_opt.html")]
-        (is (= "<p>hello <span>world</span></p>"
-               (str/trim (render-template file {}))))))
+  (testing "html template (without :markdown? option)"
+    (let [file (template-file "html/self_html_without_md_opt.html")]
+      (is (= "<p>hello <span>world</span></p>"
+             (str/trim (render-template file {}))))))
 
-    (testing "template with html layout (:markdown? option is false)"
-      (let [file (template-file "html/layout_html.html")]
-        (is (= "hello <p>world</p>"
-               (str/trim (render-template file {}))))))
+  (testing "template with html layout (:markdown? option is false)"
+    (let [file (template-file "html/layout_html.html")]
+      (is (= "hello <p>world</p>"
+             (str/trim (render-template file {}))))))
 
-    (testing "template with html layout (without :markdown? option)"
-      (let [file (template-file "html/layout_html_without_md_opt.html")]
-        (is (= "<div>hello <p>world</p></div>"
-               (str/trim (render-template file {}))))))
+  (testing "template with html layout (without :markdown? option)"
+    (let [file (template-file "html/layout_html_without_md_opt.html")]
+      (is (= "<div>hello <p>world</p></div>"
+             (str/trim (render-template file {}))))))
 
-    (testing "no layout"
-      (let [file (template-file "option/without_option.html")]
-        (is (= "<p>hello</p>"
-               (str/trim (render-template file {}))))
-        (is (= "<p>hello</p>"
-               (str/trim (render-template file {} :allow-layout? false))))))))
+  (testing "no layout"
+    (let [file (template-file "option/without_option.html")]
+      (is (= "<p>hello</p>"
+             (str/trim (render-template file {}))))
+      (is (= "<p>hello</p>"
+             (str/trim (render-template file {} :allow-layout? false)))))))
 
 
 
 ;;; get-post-data
-(deftest* get-post-data-test
-  (binding [*config* (get-config)]
-    (testing "default sort"
-      (let [[a b c :as posts] (get-post-data)]
-        (are [x y] (= x y)
-          3 (count posts)
+(defcompilertest get-post-data-test
+  (testing "default sort"
+    (let [[a b c :as posts] (get-post-data)]
+      (are [x y] (= x y)
+        3 (count posts)
 
-          "post baz" (:title a)
-          "post bar" (:title b)
-          "post foo" (:title c)
+        "post baz" (:title a)
+        "post bar" (:title b)
+        "post foo" (:title c)
 
-          "02 Feb 2022" (:date a)
-          "01 Jan 2011" (:date b)
-          "01 Jan 2000" (:date c)
+        "02 Feb 2022" (:date a)
+        "01 Jan 2011" (:date b)
+        "01 Jan 2000" (:date c)
 
-          "/2022-02/baz.html" (:url a)
-          "/2011-01/bar.html" (:url b)
-          "/2000-01/foo.html" (:url c)
+        "/2022-02/baz.html" (:url a)
+        "/2011-01/bar.html" (:url b)
+        "/2000-01/foo.html" (:url c)
 
 
-          "<p>baz</p>" (str/trim (:content a))
-          "<p>bar</p>" (str/trim (:content b))
-          "<p>foo</p>" (str/trim (:content c)))))))
+        "<p>baz</p>" (str/trim (:content a))
+        "<p>bar</p>" (str/trim (:content b))
+        "<p>foo</p>" (str/trim (:content c))))))
 
 ;;; -config
 (deftest* -config-test
