@@ -1,10 +1,13 @@
 (ns misaki.compiler.markdown.code-test
   (:require
     [misaki.compiler.markdown [code :refer :all]]
-    [misaki [config :refer [*config*]]
-            [tester :refer :all]]
+    [misaki [config  :refer [*config*]]
+            [tester  :refer :all]]
     [clojure [test   :refer :all]
              [string :as str]]))
+
+; TODO: test for code encoded
+(set-base-dir! "test/files/code/")
 
 ;; gen-uniq-str
 (deftest gen-uniq-str-test
