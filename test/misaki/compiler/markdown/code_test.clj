@@ -6,7 +6,6 @@
     [clojure [test   :refer :all]
              [string :as str]]))
 
-; TODO: test for code encoded
 (set-base-dir! "test/files/code/")
 
 ;; gen-uniq-str
@@ -53,6 +52,10 @@
   (testing "transform multiple codes"
     (are [x y] (= x (transform-codes y))
       "<pre><code>a</code></pre> b <pre><code>c</code></pre>", "```\na\n``` b ```\nc\n```"
-      "<pre><code>a</code></pre> b <pre><code class=\"brush: lang;\">c</code></pre>", "```\na\n``` b ```lang\nc\n```")))
+      "<pre><code>a</code></pre> b <pre><code class=\"brush: lang;\">c</code></pre>", "```\na\n``` b ```lang\nc\n```"))
+
+  (testing "codes should be escaped"
+    (are [x y] (= x (transform-codes y))
+      "<pre><code>&lt;p&gt;&quot;&amp;</code></pre>", "```\n<p>\"&\n```")))
 
 

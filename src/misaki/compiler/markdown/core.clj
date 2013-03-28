@@ -11,9 +11,13 @@
     [clojure.string :as str]))
 
 ;; ## Default Values
-(def DEFAULT_CODE_REGEXP #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```")
+(def DEFAULT_CODE_REGEXP
+  "Default regexp for matching code blocks."
+  #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```")
 
-(def DEFAULT_CODE_HTML_FORMAT "<pre><code{{#lang}} class=\"brush: {{lang}};\"{{/lang}}>{{code}}</code></pre>")
+(def DEFAULT_CODE_HTML_FORMAT
+  "Default format to render code blocks."
+  "<pre><code{{#lang}} class=\"brush: {{lang}};\"{{/lang}}>{{code}}</code></pre>")
 
 ;; Default post entry max
 (def POST_ENTRY_MAX 10)
