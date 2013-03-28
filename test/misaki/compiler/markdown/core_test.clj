@@ -44,7 +44,8 @@
   (let [config (get-config)]
     (are [x y] (= x y)
       "test/files/core/template/layouts/" (:layout-dir config)
-      10                                  (:post-entry-max config))))
+      DEFAULT_CODE_REGEXP (:code-regexp config)
+      DEFAULT_CODE_HTML_FORMAT (:code-html-format config))))
 
 ;;; -compile
 (deftest* -compile-test

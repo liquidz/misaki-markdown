@@ -8,5 +8,7 @@
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
  :compiler "markdown"
+
+ :posts-per-page 2
  }
 
