@@ -17,8 +17,17 @@
 
 ;;; get-post-data
 (defcompilertest get-post-data-test
-  (testing "default sort"
-    (let [[a b c :as posts] (get-post-data)]
+  (testing "posts with pagination"
+    (let [[a :as posts] (get-post-data)]
+      (are [x y] (= x y)
+        1                   (count posts)
+        "post baz"          (:title a)
+        "02 Feb 2022"       (:date a)
+        "/2022-02/baz.html" (:url a)
+        "<p>baz</p>"        (str/trim (:content a)))))
+
+  (testing "default sort, all posts"
+    (let [[a b c :as posts] (get-post-data :all? true)]
       (are [x y] (= x y)
         3 (count posts)
 
@@ -34,10 +43,31 @@
         "/2011-01/bar.html" (:url b)
         "/2000-01/foo.html" (:url c)
 
-
         "<p>baz</p>" (str/trim (:content a))
         "<p>bar</p>" (str/trim (:content b))
         "<p>foo</p>" (str/trim (:content c))))))
+
+
+;; make-base-site-data
+(defcompilertest make-base-site-data-test
+  (let [site (make-base-site-data)]
+    (are [x y] (= x y)
+      nil   (:next-page site)
+      nil   (:prev-page site)
+      1     (count (:posts site))
+      3     (count (:all-posts site))
+      "bar" (:foo site)))
+
+  (bind-config [:url-base "/foo/"
+                :next-page "n", :prev-page "p"]
+    (let [site (make-base-site-data)]
+      (are [x y] (= x y)
+        "n" (:next-page site)
+        "p" (:prev-page site)
+        )
+      )
+    )
+  )
 
 ;;; -config
 (deftest* -config-test

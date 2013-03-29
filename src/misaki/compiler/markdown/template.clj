@@ -41,19 +41,6 @@
     (str/replace #"(<[^/]+?>)[\r\n]*" (fn [[_ tag]] tag))
     (str/replace #"[\r\n]*(</.+?>)" (fn [[_ tag]] tag))))
 
-
-; =replace-code-block
-;;(defn replace-code-block
-;;  "Replace code block to HTML based on SyntaxHighlighter."
-;;  [s]
-;;  (str/replace
-;;    s #"(?s)```([^\r\n]*)\n+(.+?)[\r\n]*```"
-;;    (fn [[_ brush codes]]
-;;      (let [klass (if-not (str/blank? brush)
-;;                    (str " class=\"brush: " brush ";\""))]
-;;        (str "<pre><code" klass ">" (escape-string codes) "</code></pre>")))))
-
-
 ; =load-layout
 (defn load-layout
   "Load layout file and return slurped data."
@@ -86,26 +73,14 @@
 ;   markdown-flag?(F) html-template?(T) => html
 ;   markdown-flag?(F) html-template?(F) => html
 (defn- render* [[body option :as template] data]
-  (let [;body (replace-code-block body)
-        render-result (render body data)
+  (let [render-result (render body data)
         md-flag (:markdown? option "noopt")
-
-        markdown-process? (case md-flag "true" true, "false" false, "noopt" (not (html-template? body)))
-        ]
+        markdown-process? (case md-flag "true" true, "false" false
+                                        "noopt" (not (html-template? body)))]
     (if markdown-process?
       (transform-codes
-        (convert-without-codes #(Processor/process %) render-result)
-        )
-      render-result
-      )
-
-      ;(case md-flag
-      ;  "true"  (Processor/process render-result)
-      ;  "false" render-result
-      ;  "noopt" (if (html-template? body)
-      ;            render-result
-      ;            (Processor/process render-result)))
-    ))
+        (convert-without-codes #(Processor/process %) render-result))
+      render-result)))
 
 ; =render-template
 (defn render-template
