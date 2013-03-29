@@ -65,11 +65,7 @@
       (are [x y] (= x y)
         "/foo/" (:root site)
         "n"     (:next-page site)
-        "p"     (:prev-page site)
-        )
-      )
-    )
-  )
+        "p"     (:prev-page site)))))
 
 ;;; -config
 (deftest* -config-test

@@ -55,6 +55,7 @@
     (merge (:site *config*)
            {:date      (date->string date)
             :org-date  date
+            :root      (:url-base *config*)
             :next-page (:next-page *config*)
             :prev-page (:prev-page *config*)
             :posts     (get-post-data)
