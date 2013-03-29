@@ -52,6 +52,7 @@
 (defcompilertest make-base-site-data-test
   (let [site (make-base-site-data)]
     (are [x y] (= x y)
+      "/"   (:root site)
       nil   (:next-page site)
       nil   (:prev-page site)
       1     (count (:posts site))
@@ -62,8 +63,9 @@
                 :next-page "n", :prev-page "p"]
     (let [site (make-base-site-data)]
       (are [x y] (= x y)
-        "n" (:next-page site)
-        "p" (:prev-page site)
+        "/foo/" (:root site)
+        "n"     (:next-page site)
+        "p"     (:prev-page site)
         )
       )
     )
