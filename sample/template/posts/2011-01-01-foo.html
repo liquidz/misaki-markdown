@@ -1,3 +1,19 @@
 ; @layout default
 ; @title  post foo
+
+# [{{ site-title }}]({{ root }})
+
+## {{ title }}
+
 foo
+
+{{# prev }}
+[&laquo; {{title}}]({{url}})
+{{/ prev }}
+
+{{# next }}
+[{{title}} &raquo;]({{url}})
+{{/ next }}
+
+
+[@uochan](http://twitter.com/uochan) 2013

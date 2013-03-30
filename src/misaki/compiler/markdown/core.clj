@@ -97,6 +97,10 @@
       (let [site        (make-base-site-data)
             [prev next] (get-prev-next #(= file (:file %)) (:all-posts site))
             site        (assoc site :prev prev :next next)]
+        ; compile neighbor
+        (when (= :single (:-compiling config))
+          (if prev (msk/compile* {:-compiling :neighbor} (:file prev)))
+          (if next (msk/compile* {:-compiling :neighbor} (:file next))))
         {:status true, :filename (make-filename file)
          :body (render-template file site)})
 

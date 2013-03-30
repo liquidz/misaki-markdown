@@ -7,6 +7,8 @@
  :post-filename-regexp #"(\d{4})-(\d{1,2})-(\d{1,2})[-_](.+)$"
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
+ :compile-with-post ["index.html"]
+
  :url-base "/hello/"
  :posts-per-page 2
 

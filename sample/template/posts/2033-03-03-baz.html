@@ -1,19 +1,23 @@
 ; @layout default
-; @title  post baz
+; @title  The quick brown fox
 
-# [{{ site-title }}]({{ root }})
+## [{{ title }}]({{root}})
 
-## {{ title }}
 
-hello
+### The quick brown fox jumps over the lazy dog
+#### The quick brown fox jumps over the lazy dog
+ - The quick brown fox jumps over the lazy dog
+ - *The quick brown fox jumps over the lazy dog*
+ - **The quick brown fox jumps over the lazy dog**
 
 {{# prev }}
-{{prev.url}}
+[&laquo; {{title}}]({{url}})
 {{/ prev }}
 
 {{# next }}
-{{next.url}}
+[{{title}} &raquo;]({{url}})
 {{/ next }}
+
 
 [@uochan](http://twitter.com/uochan) 2013
 

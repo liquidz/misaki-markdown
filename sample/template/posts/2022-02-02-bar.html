@@ -1,3 +1,19 @@
 ; @layout default
-; @title  post bar
+; @title  Sample components
+
+# [{{ site-title }}]({{ root }})
+
+## {{ title }}
+
 bar
+
+{{# prev }}
+[&laquo; {{title}}]({{url}})
+{{/ prev }}
+
+{{# next }}
+[{{title}} &raquo;]({{url}})
+{{/ next }}
+
+
+[@uochan](http://twitter.com/uochan) 2013
