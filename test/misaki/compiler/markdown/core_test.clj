@@ -121,5 +121,45 @@
         true (.exists out)
         "<p>world</p>" (str/trim (slurp out)))
       (.delete out)
-      (.delete (public-file "dir")))))
+      (.delete (public-file "dir"))))
+
+  (testing "post(only prev) template"
+    (let [in  (post-file "2000-01-01-foo.html")
+          out (public-file "2000-01/foo.html")]
+      (is (test-compile in))
+      (is (.exists out))
+      (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
+        (are [x y] (= x y)
+          2                      (count arr)
+          "<p>foo</p>"           (nth arr 0)
+          "<p>prev=post bar</p>" (nth arr 1)))
+      (.delete out)
+      (.delete (public-file "2000-01"))))
+
+  (testing "post(prev and next) template"
+    (let [in  (post-file "2011-01-01-bar.html")
+          out (public-file "2011-01/bar.html")]
+      (is (test-compile in))
+      (is (.exists out))
+      (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
+        (are [x y] (= x y)
+          3                      (count arr)
+          "<p>bar</p>"           (nth arr 0)
+          "<p>prev=post baz</p>" (nth arr 1)
+          "<p>next=post foo</p>" (nth arr 2)))
+      (.delete out)
+      (.delete (public-file "2011-01"))))
+
+  (testing "post(only next) template"
+    (let [in  (post-file "2022-02-02-baz.html")
+          out (public-file "2022-02/baz.html")]
+      (is (test-compile in))
+      (is (.exists out))
+      (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
+        (are [x y] (= x y)
+          2                      (count arr)
+          "<p>baz</p>"           (nth arr 0)
+          "<p>next=post bar</p>" (nth arr 1)))
+      (.delete out)
+      (.delete (public-file "2022-02")))))
 

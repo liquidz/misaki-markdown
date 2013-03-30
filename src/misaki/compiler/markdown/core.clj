@@ -2,9 +2,10 @@
   "Markdown Compiler for Misaki"
   (:require
     [misaki.compiler.markdown.template :refer :all]
-    [misaki.util [file   :refer :all]
-                 [date   :refer :all]
-                 [string :refer :all]]
+    [misaki.util [file     :refer :all]
+                 [date     :refer :all]
+                 [string   :refer :all]
+                 [sequence :refer [get-prev-next]]]
     [misaki [config :refer [*config*] :as cnf]
             [core   :as msk]
             [server :as srv]]
@@ -32,6 +33,7 @@
   [& {:keys [all?] :or {all? false}}]
   (map #(let [date (cnf/get-date-from-file %)]
           (assoc (-> % slurp get-template-option)
+                 :file %
                  :date (date->string date)
                  :date-xml-schema (date->xml-schema date)
                  :content (render-template % (:site *config*) :allow-layout? false)
@@ -85,12 +87,23 @@
   "Compile function called by misaki.core."
   [config file]
   (binding [*config* config]
-    (if (layout-file? file)
-      {:status       'skip
-       :all-compile? true}
-      {:status   true
-       :filename (make-filename file)
-       :body     (render-template file (make-base-site-data))})))
+    (cond
+      ; layout template
+      (layout-file? file)
+      {:status 'skip, :all-compile? true}
+
+      ; post template
+      (cnf/post-file? file)
+      (let [site        (make-base-site-data)
+            [prev next] (get-prev-next #(= file (:file %)) (:all-posts site))
+            site        (assoc site :prev prev :next next)]
+        {:status true, :filename (make-filename file)
+         :body (render-template file site)})
+
+      ; other templates
+      :else
+        {:status true, :filename (make-filename file)
+         :body (render-template file (make-base-site-data))})))
 
 (defn -main [& args]
   (apply srv/-main args))
