@@ -1,0 +1,30 @@
+; @markdown? false
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></head>script>
+    <![endif]-->
+
+    {{#local.css}}
+    <link rel="stylesheet" href="{{root}}{{.}}" />
+    {{/local.css}}
+
+    {{#remote.css}}
+    <link rel="stylesheet" href="{{.}}" />
+    {{/remote.css}}
+
+    <title>{{title}}</title>
+</head>
+<body>
+{{&content}}
+
+{{#local.js}}
+<script type="text/javascript" src="{{root}}{{.}}"></script>
+{{/local.js}}
+</body>
+</html>
+

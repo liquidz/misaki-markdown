@@ -8,9 +8,16 @@
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
  :url-base "/hello/"
+ :posts-per-page 2
+
+ :site {:local {:css ["css/main.css"]
+                :js  ["js/highlight.pack.js"
+                      "js/main.js"]}
+        :remote {:css ["http://fonts.googleapis.com/css?family=Josefin+Sans"
+                       "http://yandex.st/highlightjs/7.3/styles/github.min.css"]}
+        }
 
  :compiler "markdown"
 
- :posts-per-page 2
  }
 

@@ -1,30 +1,57 @@
 ; @layout default
 ; @title misaki markdown
 
-# [{{title}}]({{root}})
+# [{{ title }}]({{ root }})
 
-hello, world
+[Misaki](https://github.com/liquidz/misaki) markdown compiler.
+[Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
+
+## Sample posts
+
+{{# posts }}
+* [{{ date }} - {{ title }}]({{ url }})
+{{/ posts }}
+
+{{# next-page }}
+[Next page &raquo;]({{ next-page }})
+{{/ next-page }}
+{{# prev-page }}
+[&laquo; Prev page]({{ prev-page }})
+{{/ prev-page }}
+
+## Template source
 
 ```
-= markdown
-this is *code*
+# [{{ title }}]({{ root }})
+
+[Misaki](https://github.com/liquidz/misaki) markdown compiler.
+[Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
+
+## Sample posts
+
+{{# posts }}
+* [{{ date }} - {{ title }}]({{ url }})
+{{/ posts }}
+
+{{# next-page }}
+[Next page &raquo;]({{ next-page }})
+{{/ next-page }}
+{{# prev-page }}
+[&laquo; Prev page]({{ prev-page }})
+{{/ prev-page }}
+
+## Template source
+
+## Document
+{{! See [http://liquidz.github.com/misaki-markdown/](http://liquidz.github.com/misaki-markdown/). }}
+Please wait.
+
+[@uochan](http://twitter.com/uochan) 2013
 ```
 
-```clojure
-(println "this is clojure code")
-```
+## Document
 
-{{#posts}}
-* [{{title}}]({{url}})
-{{/posts}}
+{{! See [http://liquidz.github.com/misaki-markdown/](http://liquidz.github.com/misaki-markdown/). }}
+Please wait.
 
-{{#next-page}}
-[Next page]({{next-page}})
-{{/next-page}}
-
-{{#prev-page}}
-[Prev page]({{prev-page}})
-{{/prev-page}}
-
-
-
+[@uochan](http://twitter.com/uochan) 2013

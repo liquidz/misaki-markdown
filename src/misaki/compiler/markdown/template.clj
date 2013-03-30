@@ -59,28 +59,26 @@
                    (split (load-layout layout-name))))
                (split slurped-data)))))
 
-; =html-template?
-(defn html-template?
-  "Check whether slurped data is HTML or not."
-  [slurped-data]
-  (not (nil? (re-seq #"(?s)<.+?>.*</.+?>" slurped-data))))
-
 ; =render*
-;   markdown-flag?( ) html-template?(T) => html
-;   markdown-flag?( ) html-template?(F) => markdown
-;   markdown-flag?(T) html-template?(T) => markdown
-;   markdown-flag?(T) html-template?(F) => markdown
-;   markdown-flag?(F) html-template?(T) => html
-;   markdown-flag?(F) html-template?(F) => html
+;   markdown-flag?( ) => markdown
+;   markdown-flag?(T) => markdown
+;   markdown-flag?(F) => html
 (defn- render* [[body option :as template] data]
   (let [render-result (render body data)
         md-flag (:markdown? option "noopt")
-        markdown-process? (case md-flag "true" true, "false" false
-                                        "noopt" (not (html-template? body)))]
+        markdown-process? (if (= "false" md-flag) false true)]
+    ;(if markdown-process?
+    ;  (transform-codes
+    ;    (convert-without-codes #(Processor/process %) render-result))
+    ;  render-result)
+
     (if markdown-process?
       (transform-codes
-        (convert-without-codes #(Processor/process %) render-result))
-      render-result)))
+        (convert-without-codes #(Processor/process (render % data)) body))
+      (render body data))
+    
+    
+    ))
 
 ; =render-template
 (defn render-template

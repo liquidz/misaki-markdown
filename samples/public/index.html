@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,18 +8,56 @@
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></head>script>
 <![endif]-->
 
+<link rel="stylesheet" href="/hello/css/main.css" />
+
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Josefin+Sans" />
+<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css" />
+
 <title>misaki markdown</title>
 </head>
 <body>
+<div class="container">
 <h1><a href="/hello/">misaki markdown</a></h1>
-<p>hello, world</p>
-<p><pre><code>= markdown
-this is *code*</code></pre></p>
-<p><pre><code class="brush: clojure;">(println &quot;this is clojure code&quot;)</code></pre></p>
+<p><a href="https://github.com/liquidz/misaki">Misaki</a> markdown compiler.
+<a href="https://github.com/mojombo/jekyll">Jekyll</a> inspired static site generator in Clojure.</p>
+<h2>Sample posts</h2>
 <ul>
-<li><a href="/hello/2022-02/baz.html">post baz</a></li>
-<li><a href="/hello/2011-01/bar.html">post bar</a></li>
+<li><a href="/hello/2022-02/baz.html">02 Feb 2022 - post baz</a></li>
+<li><a href="/hello/2011-01/bar.html">01 Jan 2011 - post bar</a></li>
 </ul>
-<p><a href="/hello/page2/index.html">Next page</a></p>
+<p><a href="/hello/page2/index.html">Next page &raquo;</a></p>
+<h2>Template source</h2>
+<p><pre><code># [{{ title }}]({{ root }})
+
+[Misaki](https://github.com/liquidz/misaki) markdown compiler.
+[Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
+
+## Sample posts
+
+{{# posts }}
+* [{{ date }} - {{ title }}]({{ url }})
+{{/ posts }}
+
+{{# next-page }}
+[Next page &amp;raquo;]({{ next-page }})
+{{/ next-page }}
+{{# prev-page }}
+[&amp;laquo; Prev page]({{ prev-page }})
+{{/ prev-page }}
+
+## Template source
+
+## Document
+{{! See [http://liquidz.github.com/misaki-markdown/](http://liquidz.github.com/misaki-markdown/). }}
+Please wait.
+
+[@uochan](http://twitter.com/uochan) 2013</code></pre></p>
+<h2>Document</h2>
+<p>Please wait.</p>
+<p><a href="http://twitter.com/uochan">@uochan</a> 2013</p>
+</div>
+
+<script type="text/javascript" src="/hello/js/highlight.pack.js"></script>
+<script type="text/javascript" src="/hello/js/main.js"></script>
 </body>
 </html>
