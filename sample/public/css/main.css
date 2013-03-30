@@ -26,6 +26,8 @@ h1 + p {
     font-size: 20px;
 }
 
+h2 a { color: #000; text-decoration: none; }
+
 /* =footer */
 footer p { text-align: right; }
 
@@ -37,7 +39,9 @@ h2:first-letter { color: #93ca76; font-weight: bold; }
 
 
 /* =footer(last paragraph) */
-p:nth-last-of-type(1) {
+hr { border: 1px solid #fff; }
+
+hr + p {
     margin-top: 1em;
     text-align: right;
 }
