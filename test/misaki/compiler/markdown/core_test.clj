@@ -47,6 +47,14 @@
         "<p>bar</p>" (str/trim (:content b))
         "<p>foo</p>" (str/trim (:content c))))))
 
+;;; make-filename
+(defcompilertest make-filename-test
+  (are [x y] (= (.getName (public-file x))
+                (#'misaki.compiler.markdown.core/make-filename (template-file y)))
+    "index.html" "index.html"
+    "index.htm" "index.htm"
+    "index.xml" "index.xml"
+    "index.html" "index.md"))
 
 ;; make-base-site-data
 (defcompilertest make-base-site-data-test

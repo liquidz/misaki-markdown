@@ -71,7 +71,7 @@
 (defn -extension
   "Specifying file extensions function called by misaki.core."
   []
-  (list :htm :html :md))
+  (list :htm :html :md :xml))
 
 ; =-config
 (defn -config

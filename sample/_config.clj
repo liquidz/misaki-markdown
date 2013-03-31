@@ -9,7 +9,7 @@
 
  :compile-with-post ["index.html"]
 
- :url-base "/hello/"
+ :url-base "/"
  :posts-per-page 2
 
  :site {:site-title "misaki markdown"
