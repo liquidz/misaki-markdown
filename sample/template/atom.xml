@@ -2,18 +2,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>$(site-title)</title>
-    <link href="$(root)/atom.xml" rel="self" />
-    <link href="$(root)" />
+    <link href="$(atom-base)$(root)atom.xml" rel="self" />
+    <link href="$(atom-base)$(root)" />
     <updated></updated>
-    <id>$(root)</id>
+    <id>$(atom-base)</id>
     <author><name>$(twitter-id)</name></author>
 
     @(for all-posts)
     <entry>
         <title>$(title)</title>
-        <link>$(root)$(url)</link>
+        <link>$(atom-base)$(url)</link>
         <updated>$(date->xml-schema date)</updated>
-        <id>$(root)$(url)</id>
+        <id>$(atom-base)$(url)</id>
         <content type="html">$(content)</content>
     </entry>
     @(end)

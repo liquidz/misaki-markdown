@@ -14,6 +14,9 @@
 (declare make-base-site-data)
 
 ;; ## Default Values
+(def DEFAULT_LAYOUT_DIR
+  "Default layout directory."
+  "layouts/")
 (def DEFAULT_CODE_REGEXP
   "Default regexp for matching code blocks."
   #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```")
@@ -81,7 +84,7 @@
   "Custom configuration function called by misaki.core."
   [{:keys [template-dir] :as config}]
   (assoc config
-         :layout-dir       (path template-dir (:layout-dir config))
+         :layout-dir       (path template-dir (:layout-dir config DEFAULT_LAYOUT_DIR))
          :code-regexp      (:code-regexp config DEFAULT_CODE_REGEXP)
          :code-html-format (:code-html-format config DEFAULT_CODE_HTML_FORMAT)))
 
