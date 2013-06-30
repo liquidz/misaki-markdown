@@ -1,20 +1,14 @@
 ; @layout default
 ; @title  Pagination
 
-## [{{ title }}]({{ root }})
+## [$(title)]($(root))
 
  - Pagination sample.
 
-{{# prev }}
-[&laquo; {{title}}]({{url}})
-{{/ prev }}
+@(if prev)
+[&laquo; $(title)]($(url))
+@(end)
 &nbsp;&nbsp;
-{{# next }}
-[{{title}} &raquo;]({{url}})
-{{/ next }}
-
-
------
-
-
-[@uochan](http://twitter.com/uochan) 2013
+@(if next)
+[$(title) &raquo;]($(url))
+@(end)

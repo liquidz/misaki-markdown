@@ -9,22 +9,26 @@
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></head>script>
     <![endif]-->
 
-    {{#local.css}}
-    <link rel="stylesheet" href="{{root}}{{.}}" />
-    {{/local.css}}
+    @(if atom)
+    <link href="$(root)$(atom)" rel="alternate" title="$(site-title)" type="application/atom+xml" />
+    @(end)
 
-    {{#remote.css}}
-    <link rel="stylesheet" href="{{.}}" />
-    {{/remote.css}}
+    @(for remote.css)
+    <link rel="stylesheet" href="$(.)" />
+    @(end)
 
-    <title>{{title}}</title>
+    @(for local.css)
+    <link rel="stylesheet" href="$(root)$(.)" />
+    @(end)
+
+    <title>$(title)</title>
 </head>
 <body>
-{{&content}}
+$(raw content)
 
-{{#local.js}}
-<script type="text/javascript" src="{{root}}{{.}}"></script>
-{{/local.js}}
+@(for local.js)
+<script type="text/javascript" src="$(root)$(.)"></script>
+@(end)
 </body>
 </html>
 

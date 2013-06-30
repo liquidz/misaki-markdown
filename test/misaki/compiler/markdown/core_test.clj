@@ -3,6 +3,7 @@
     [misaki.compiler.markdown.core :refer :all]
     [misaki [tester  :refer :all]
             [config  :refer [*config*]]]
+    [clj-time.core   :refer [date-time]]
     [clojure [test   :refer :all]
              [string :as str]]))
 
@@ -20,11 +21,11 @@
   (testing "posts with pagination"
     (let [[a :as posts] (get-post-data)]
       (are [x y] (= x y)
-        1                   (count posts)
-        "post baz"          (:title a)
-        "02 Feb 2022"       (:date a)
-        "/2022-02/baz.html" (:url a)
-        "<p>baz</p>"        (str/trim (:content a)))))
+        1                    (count posts)
+        "post baz"           (:title a)
+        (date-time 2022 2 2) (:date a)
+        "/2022-02/baz.html"  (:url a)
+        "<p>baz</p>"         (str/trim (:content a)))))
 
   (testing "default sort, all posts"
     (let [[a b c :as posts] (get-post-data :all? true)]
@@ -35,9 +36,9 @@
         "post bar" (:title b)
         "post foo" (:title c)
 
-        "02 Feb 2022" (:date a)
-        "01 Jan 2011" (:date b)
-        "01 Jan 2000" (:date c)
+        (date-time 2022 2 2) (:date a)
+        (date-time 2011 1 1) (:date b)
+        (date-time 2000 1 1) (:date c)
 
         "/2022-02/baz.html" (:url a)
         "/2011-01/bar.html" (:url b)
@@ -132,23 +133,32 @@
       (.delete (public-file "dir"))))
 
   (testing "post(only prev) template"
-    (let [in  (post-file "2000-01-01-foo.html")
-          out (public-file "2000-01/foo.html")]
+    (let [in       (post-file "2000-01-01-foo.html")
+          out      (public-file "2000-01/foo.html")
+          prev-out (public-file "2011-01/bar.html")]
       (is (test-compile in))
       (is (.exists out))
+      (is (.exists prev-out))
       (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
         (are [x y] (= x y)
           2                      (count arr)
           "<p>foo</p>"           (nth arr 0)
           "<p>prev=post bar</p>" (nth arr 1)))
       (.delete out)
-      (.delete (public-file "2000-01"))))
+      (.delete prev-out)
+      (.delete (public-file "2000-01"))
+      (.delete (public-file "2011-01"))
+      ))
 
   (testing "post(prev and next) template"
-    (let [in  (post-file "2011-01-01-bar.html")
-          out (public-file "2011-01/bar.html")]
+    (let [in       (post-file "2011-01-01-bar.html")
+          out      (public-file "2011-01/bar.html")
+          prev-out (public-file "2022-02/baz.html")
+          next-out (public-file "2000-01/foo.html")]
       (is (test-compile in))
       (is (.exists out))
+      (is (.exists prev-out))
+      (is (.exists next-out))
       (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
         (are [x y] (= x y)
           3                      (count arr)
@@ -156,18 +166,26 @@
           "<p>prev=post baz</p>" (nth arr 1)
           "<p>next=post foo</p>" (nth arr 2)))
       (.delete out)
-      (.delete (public-file "2011-01"))))
+      (.delete prev-out)
+      (.delete next-out)
+      (.delete (public-file "2000-01"))
+      (.delete (public-file "2011-01"))
+      (.delete (public-file "2022-02"))))
 
   (testing "post(only next) template"
-    (let [in  (post-file "2022-02-02-baz.html")
-          out (public-file "2022-02/baz.html")]
+    (let [in       (post-file "2022-02-02-baz.html")
+          out      (public-file "2022-02/baz.html")
+          next-out (public-file "2011-01/bar.html")]
       (is (test-compile in))
       (is (.exists out))
+      (is (.exists next-out))
       (let [arr (str/split (str/trim (slurp out)) #"[\r\n]+")]
         (are [x y] (= x y)
           2                      (count arr)
           "<p>baz</p>"           (nth arr 0)
           "<p>next=post bar</p>" (nth arr 1)))
       (.delete out)
+      (.delete next-out)
+      (.delete (public-file "2011-01"))
       (.delete (public-file "2022-02")))))
 

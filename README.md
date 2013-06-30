@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/liquidz/misaki-markdown.png)](http://travis-ci.org/liquidz/misaki-markdown)
 
-misaki-markdown is one of [misaki](https://github.com/liquidz/misaki)'s compiler plugin.
+misaki-markdown is one of [misaki](http://liquidz.github.io/misaki/)'s compiler plugin.
 
 ## Example template
 

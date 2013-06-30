@@ -1,60 +1,57 @@
 ; @layout default
 ; @title  misaki markdown
 
-# [{{ site-title }}]({{ root }})
+# [$(site-title)]($(root))
 
 [Misaki](https://github.com/liquidz/misaki) markdown compiler.
 [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
 ## Sample posts
 
-{{# posts }}
-* [{{ date }} - {{ title }}]({{ url }})
-{{/ posts }}
+@(for posts)
+* [$(date-format date "yyyy MM dd") - $(title)]($(url))
+@(end)
 
-{{# next-page }}
-[Next page &raquo;]({{ next-page }})
-{{/ next-page }}
-{{# prev-page }}
-[&laquo; Prev page]({{ prev-page }})
-{{/ prev-page }}
+@(if next-page)
+[Next page &raquo;]($(next-page))
+@(end)
+
+@(if prev-page)
+[&laquo; Prev page]($(prev-page))
+@(end)
 
 ## Template source
-
 ```
-# [{{ title }}]({{ root }})
+; @layout default
+; @title  misaki markdown
+
+# [$(site-title)]($(root))
 
 [Misaki](https://github.com/liquidz/misaki) markdown compiler.
 [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
 ## Sample posts
 
-{{# posts }}
-* [{{ date }} - {{ title }}]({{ url }})
-{{/ posts }}
+@(for posts)
+* [$(date) - $(title)]($(url))
+@(end)
 
-{{# next-page }}
-[Next page &raquo;]({{ next-page }})
-{{/ next-page }}
-{{# prev-page }}
-[&laquo; Prev page]({{ prev-page }})
-{{/ prev-page }}
+@(if next-page)
+[Next page &raquo;]($(next-page))
+@(end)
+
+@(if prev-page)
+[&laquo; Prev page]($(prev-page))
+@(end)
 
 ## Template source
 
 ## Document
 Please wait.
-
-[@uochan](http://twitter.com/uochan) 2013
 ```
 
 ## Document
 
-{{! See <http://liquidz.github.com/misaki-markdown/>. }}
+$(comment See <http://liquidz.github.com/misaki-markdown/>.)
 Please wait.
 
-
-----
-
-
-[@uochan](http://twitter.com/uochan) 2013

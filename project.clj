@@ -5,9 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [misaki "0.2.6.1-beta"]
-                 [de.ubercode.clostache/clostache "1.3.1"]
+                 [misaki "0.2.6.2-beta"]
+                 [cuma "0.0.4"]
                  [com.github.rjeschke/txtmark "0.8"]]
+  :dev-dependencies [clj-time "0.5.0"]
 
   :repositories [["renejeschke-releases" "http://maven.renejeschke.de"]]
 

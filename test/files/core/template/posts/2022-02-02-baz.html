@@ -2,7 +2,6 @@
 baz
 
 
-{{# prev }}prev={{ title }}{{/ prev}}
+@(if prev)prev=$(title)@(end)
 
-
-{{# next }}next={{ title }}{{/ next}}
+@(if next)next=$(title)@(end)

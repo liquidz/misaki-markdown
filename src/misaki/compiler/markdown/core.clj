@@ -11,13 +11,15 @@
             [server :as srv]]
     [clojure.string :as str]))
 
+(declare make-base-site-data)
+
 ;; ## Default Values
 (def DEFAULT_CODE_REGEXP
   "Default regexp for matching code blocks."
   #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```")
 (def DEFAULT_CODE_HTML_FORMAT
   "Default format to render code blocks."
-  "<pre><code{{#lang}} class=\"brush: {{lang}};\"{{/lang}}>{{code}}</code></pre>")
+  "<pre><code@(if lang) class=\"brush: $(lang);\"@(end)>$(code)</code></pre>")
 
 ; =layout-file?
 (defn layout-file?
@@ -31,14 +33,16 @@
 (defn get-post-data
   "Get posts data."
   [& {:keys [all?] :or {all? false}}]
-  (map #(let [date (cnf/get-date-from-file %)]
-          (assoc (-> % slurp get-template-option)
-                 :file %
-                 :date (date->string date)
-                 :date-xml-schema (date->xml-schema date)
-                 :content (render-template % (:site *config*) :allow-layout? false)
-                 :url (cnf/make-output-url %)))
-       (msk/get-post-files :sort? true :all? all?)))
+  (let [site (make-base-site-data :ignore-post? true)]
+      (map #(let [date (cnf/get-date-from-file %)]
+              (assoc (-> % slurp get-template-option)
+                     :file %
+                     :date date
+                     :content (render-template % (merge (:site *config*) site)
+                                               :allow-layout? false
+                                               :skip-runtime-exception? true)
+                   :url (cnf/make-output-url %)))
+         (msk/get-post-files :sort? true :all? all?))))
 
 ; =make-filename
 (defn- make-filename
@@ -52,16 +56,15 @@
 ; =make-base-site-data
 (defn make-base-site-data
   "Make base site data for rendering templates."
-  []
+  [& {:keys [ignore-post?] :or {ignore-post? false}}]
   (let [date (now)]
     (merge (:site *config*)
            {:date      (date->string date)
-            :org-date  date
             :root      (:url-base *config*)
             :next-page (:next-page *config*)
             :prev-page (:prev-page *config*)
-            :posts     (get-post-data)
-            :all-posts (get-post-data :all? true)
+            :posts     (if-not ignore-post? (get-post-data))
+            :all-posts (if-not ignore-post? (get-post-data :all? true))
             :date-xml-schema (date->xml-schema date)})))
 
 
@@ -106,8 +109,8 @@
 
       ; other templates
       :else
-        {:status true, :filename (make-filename file)
-         :body (render-template file (make-base-site-data))})))
+      {:status true, :filename (make-filename file)
+       :body (render-template file (make-base-site-data))})))
 
 (defn -main [& args]
   (apply srv/-main args))

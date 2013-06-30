@@ -40,7 +40,7 @@
 ;;; load-layout
 (deftest* load-layout-test
   (binding [*config* (get-config)]
-    (is (= "hello {{&content}}"
+    (is (= "hello $(raw content)"
            (str/trim (remove-option-lines (load-layout "without_layout")))))))
 
 ;;; get-tempaltes
@@ -51,7 +51,7 @@
       (are [x y] (= x y)
         2 (count tmpls)
         "world" (-> tmpls first first str/trim)
-        "hello {{&content}}" (-> tmpls second first str/trim)
+        "hello $(raw content)" (-> tmpls second first str/trim)
         "world" (-> tmpls first  second :title)
         "hello" (-> tmpls second second :title))))
 
@@ -61,8 +61,8 @@
       (are [x y] (= x y)
         3 (count tmpls)
         "foo" (-> tmpls first first str/trim)
-        "baz {{&content}}" (-> tmpls second first str/trim)
-        "hello {{&content}}" (-> tmpls (nth 2) first str/trim)
+        "baz $(raw content)" (-> tmpls second first str/trim)
+        "hello $(raw content)" (-> tmpls (nth 2) first str/trim)
         "foo"   (-> tmpls first  second :title)
         "baz"   (-> tmpls second second :title)
         "hello" (-> tmpls (nth 2) second :title)))))
@@ -73,37 +73,37 @@
     (is (= "<h1>hello world</h1>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["#hello {{msg}}" {}] {:msg "world"})))))
+                 ["#hello $(msg)" {}] {:msg "world"})))))
 
   (testing "html template without markdown? option should be rendered as MARKDOWN"
     (is (= "<p><strong>hello world</strong></p>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["<strong>hello {{msg}}</strong>" {}] {:msg "world"})))))
+                 ["<strong>hello $(msg)</strong>" {}] {:msg "world"})))))
 
   (testing "markdown template with TRUE markdown? option should be renderd as MARKDOWN"
     (is (= "<h1>hello world</h1>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["#hello {{msg}}" {:markdown? "true"}] {:msg "world"})))))
+                 ["#hello $(msg)" {:markdown? "true"}] {:msg "world"})))))
 
   (testing "html template with TRUE markdown? option should be rendered as MARKDOWN"
     (is (= "<p><strong>hello world</strong></p>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["<strong>hello {{msg}}</strong>" {:markdown? "true"}] {:msg "world"})))))
+                 ["<strong>hello $(msg)</strong>" {:markdown? "true"}] {:msg "world"})))))
 
   (testing "markdown template with FALSE markdown? option should be rendered as HTML"
     (is (= "#hello world"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["#hello {{msg}}" {:markdown? "false"}] {:msg "world"})))))
+                 ["#hello $(msg)" {:markdown? "false"}] {:msg "world"})))))
 
   (testing "html template with FALSE markdown? option should be rendered as HTML"
     (is (= "<strong>hello world</strong>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["<strong>hello {{msg}}</strong>" {:markdown? "false"}] {:msg "world"}))))))
+                 ["<strong>hello $(msg)</strong>" {:markdown? "false"}] {:msg "world"}))))))
 
 ;;; render-template
 (defcompilertest render-template-test
@@ -160,6 +160,11 @@
     (let [file (template-file "html/layout_html_without_md_opt.html")]
       (is (= "<div>hello <p>world</p></div>"
              (str/trim (render-template file {}))))))
+
+  (testing "template with html and markdown layout"
+    (let [file (template-file "md_and_html/md_template_with_site_var.html")]
+      (is (= "hello <h1>markdown</h1><p><em>world</em></p>"
+             (str/replace (render-template file (:site *config*)) #"[\r\n]" "")))))
 
   (testing "no layout"
     (let [file (template-file "option/without_option.html")]

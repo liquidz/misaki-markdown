@@ -2,7 +2,8 @@
   "Code Parser for Misaki-Markdown"
   (:require
     [misaki.config    :refer [*config*]]
-    [clostache.parser :refer [render]]
+    ;[clostache.parser :refer [render]]
+    [cuma.core :refer [render]]
     [clojure.string   :as str]))
 
 ; =gen-uniq-str
@@ -19,7 +20,7 @@
         code-map    (atom {})
         code->uniq  (fn [[code _]] (let [us (gen-uniq-str)]
                                      (swap! code-map assoc us code) us))
-        uniq->code  (fn [res key-str]  (str/replace res (re-pattern key-str) (get @code-map key-str)))]
+        uniq->code  (fn [res key-str]  (str/replace res key-str (get @code-map key-str)))]
     (-> (str/replace s code-regexp code->uniq)
         convert-f
         (as-> applied-str
@@ -33,7 +34,6 @@
     (str/replace
       s code-regexp
       (fn [[_ lang code]]
-        (render code-html-format {:lang (if-not (str/blank? lang) lang)
-                                  :code code})))))
+        (render code-html-format {:lang (if-not (str/blank? lang) lang) :code code})))))
 
 

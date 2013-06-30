@@ -1,0 +1,20 @@
+; @markdown? false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>$(site-title)</title>
+    <link href="$(root)/atom.xml" rel="self" />
+    <link href="$(root)" />
+    <updated></updated>
+    <id>$(root)</id>
+    <author><name>$(twitter-id)</name></author>
+
+    @(for all-posts)
+    <entry>
+        <title>$(title)</title>
+        <link>$(root)$(url)</link>
+        <updated>$(date->xml-schema date)</updated>
+        <id>$(root)$(url)</id>
+        <content type="html">$(content)</content>
+    </entry>
+    @(end)
+</feed>

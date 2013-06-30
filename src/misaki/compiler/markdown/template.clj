@@ -5,9 +5,10 @@
     [misaki.util [file   :refer :all]
                  [date   :refer :all]
                  [string :refer :all]]
-    [misaki.config    :refer [*config*]]
-    [clostache.parser :refer [render]]
-    [clojure.string   :as str])
+    [misaki.config       :refer [*config*]]
+    [cuma.core           :as cuma]
+    [clojure.string      :as str]
+    cuma.extension.misaki.markdown.date)
   (:import
     [com.github.rjeschke.txtmark Processor]))
 
@@ -51,40 +52,32 @@
 (defn get-templates
   "Get slurped template file containing layout files."
   [slurped-data]
-  (letfn [(split [s] ((juxt remove-option-lines get-template-option) s))]
+  (letfn [(split-option-body [s] ((juxt remove-option-lines get-template-option) s))]
     (take-while
       #(not (nil? %))
       (iterate (fn [[_ tmpl-option]]
                  (if-let [layout-name (:layout tmpl-option)]
-                   (split (load-layout layout-name))))
-               (split slurped-data)))))
+                   (split-option-body (load-layout layout-name))))
+               (split-option-body slurped-data)))))
+
 
 ; =render*
 ;   markdown-flag?( ) => markdown
 ;   markdown-flag?(T) => markdown
 ;   markdown-flag?(F) => html
 (defn- render* [[body option :as template] data]
-  (let [render-result (render body data)
-        md-flag (:markdown? option "noopt")
+  (let [md-flag (:markdown? option "noopt")
         markdown-process? (if (= "false" md-flag) false true)]
-    ;(if markdown-process?
-    ;  (transform-codes
-    ;    (convert-without-codes #(Processor/process %) render-result))
-    ;  render-result)
-
     (if markdown-process?
       (transform-codes
-        (convert-without-codes #(Processor/process (render % data)) body))
-      (render body data))
-    
-    
-    ))
+        (convert-without-codes #(Processor/process (cuma/render % data)) body))
+      (cuma/render body data))))
 
 ; =render-template
 (defn render-template
   "Render java.io.File as HTML."
-  [file base-data & {:keys [allow-layout?]
-                     :or   {allow-layout? true}}]
+  [file base-data & {:keys [allow-layout? skip-runtime-exception?]
+                     :or   {allow-layout? true, skip-runtime-exception? false}}]
   (let [tmpls (get-templates (slurp file))
         htmls (map first tmpls)
         data  (merge base-data (reduce merge (reverse (map second tmpls))))]

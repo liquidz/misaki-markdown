@@ -8,10 +8,15 @@
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></head>script>
 <![endif]-->
 
-<link rel="stylesheet" href="/css/main.css" />
+<link href="/atom.xml" rel="alternate" title="misaki markdown" type="application/atom+xml" />
+
 
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Josefin+Sans" />
 <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css" />
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
 
 <title>misaki markdown</title>
 </head>
@@ -22,35 +27,34 @@
 <a href="https://github.com/mojombo/jekyll">Jekyll</a> inspired static site generator in Clojure.</p>
 <h2>Sample posts</h2>
 <ul>
-<li><a href="/2033-03/baz.html">03 Mar 2033 - The quick brown fox</a></li>
-<li><a href="/2022-02/bar.html">02 Feb 2022 - Libraries</a></li>
+<li><a href="/2033-03/baz.html">2033 03 03 - The quick brown fox</a></li>
+<li><a href="/2022-02/bar.html">2022 02 02 - Libraries</a></li>
 </ul>
 <p><a href="/page2/index.html">Next page &raquo;</a></p>
 <h2>Template source</h2>
-<p><pre><code># [{{ title }}]({{ root }})
+<p><pre><code># [$(site-title)]($(root))
 
 [Misaki](https://github.com/liquidz/misaki) markdown compiler.
 [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
 ## Sample posts
 
-{{# posts }}
-* [{{ date }} - {{ title }}]({{ url }})
-{{/ posts }}
+@(for posts)
+* [$(date) - $(title)]($(url))
+@(end)
 
-{{# next-page }}
-[Next page &amp;raquo;]({{ next-page }})
-{{/ next-page }}
-{{# prev-page }}
-[&amp;laquo; Prev page]({{ prev-page }})
-{{/ prev-page }}
+@(if next-page)
+[Next page &amp;raquo;]($(next-page))
+@(end)
+
+@(if prev-page)
+[&amp;laquo; Prev page]($(prev-page))
+@(end)
 
 ## Template source
 
 ## Document
-Please wait.
-
-[@uochan](http://twitter.com/uochan) 2013</code></pre></p>
+Please wait.</code></pre></p>
 <h2>Document</h2>
 <p>Please wait.</p>
 <hr />
@@ -59,5 +63,6 @@ Please wait.
 
 <script type="text/javascript" src="/js/highlight.pack.js"></script>
 <script type="text/javascript" src="/js/main.js"></script>
+
 </body>
 </html>
