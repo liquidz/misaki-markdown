@@ -52,6 +52,5 @@ Please wait.
 
 ## Document
 
-$(comment See <http://liquidz.github.com/misaki-markdown/>.)
-Please wait.
+See <https://github.com/liquidz/misaki-markdown>.
 
