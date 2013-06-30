@@ -7,7 +7,7 @@ This compiler allows you to use misaki Markdown templates instead of S-exp templ
 
 ## Example template
 
-```md
+```
 ; @layout default
 ; @title  sample title
 
@@ -36,7 +36,7 @@ welcome to misaki-markdown's sample page.
 
 ### Run sample
 
-```
+```sh
 $ git clone git@github.com:liquidz/misaki-markdown.git
 $ cd misaki-markdown
 $ lein run sample
@@ -45,16 +45,16 @@ $ lein run sample
 ## Configuration
 
 ### Code detection
-```
-_config.clj
+```clj
+;_config.clj
 
 ;; code regexp setting
 ;;   default value: #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```"
 :code-regexp #"(?s)```([^\r\n]*)[\r\n]+(.+?)[\r\n]+```"
 ```
 ### Output code html
-```
-_config.clj
+```clj
+;_config.clj
 
 ;; code html format setting
 ;;   defailt value; "<pre><code@(if lang) class="brush: $(lang);"@(end)>$(code)</code></pre>"
