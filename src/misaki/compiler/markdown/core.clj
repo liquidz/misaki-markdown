@@ -32,6 +32,24 @@
     (str-contains? (.getAbsolutePath file) layout-dir)
     false))
 
+; =md-extension->html-extension
+(defn- md-extension->html-extension
+  "Convert markdown extension(*.md) to html extension(*.html)."
+  [s]
+  (if (has-extension? :md s)
+    (str (remove-last-extension s) ".html")
+    s))
+
+; =make-url
+(def ^{:private true} make-url
+  "Make output url from java.io.File."
+  (comp md-extension->html-extension cnf/make-output-url))
+
+; =make-filename
+(def ^{:private true} make-filename
+  "Make output filename from java.io.File."
+  (comp md-extension->html-extension cnf/make-output-filename))
+
 ; =get-post-data
 (defn get-post-data
   "Get posts data."
@@ -44,17 +62,8 @@
                      :content (render-template % (merge (:site *config*) site)
                                                :allow-layout? false
                                                :skip-runtime-exception? true)
-                   :url (cnf/make-output-url %)))
+                   :url (make-url %)))
          (msk/get-post-files :sort? true :all? all?))))
-
-; =make-filename
-(defn- make-filename
-  "Make output filename from java.io.File."
-  [file]
-  (let [filename (cnf/make-output-filename file)]
-    (if (has-extension? :md file)
-      (str (remove-extension filename) ".html")
-      filename)))
 
 ; =make-base-site-data
 (defn make-base-site-data

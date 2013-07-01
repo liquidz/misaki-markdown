@@ -151,7 +151,7 @@
       ))
 
   (testing "post(prev and next) template"
-    (let [in       (post-file "2011-01-01-bar.html")
+    (let [in       (post-file "2011-01-01-bar.md")
           out      (public-file "2011-01/bar.html")
           prev-out (public-file "2022-02/baz.html")
           next-out (public-file "2000-01/foo.html")]
