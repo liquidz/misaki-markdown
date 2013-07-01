@@ -1,6 +1,6 @@
 ![misaki markdown logo](https://raw.github.com/liquidz/misaki-markdown/master/sample/public/img/logo.png)
 
-[![Build Status](https://secure.travis-ci.org/liquidz/misaki-markdown.png)](http://travis-ci.org/liquidz/misaki-markdown)
+[![Build Status](https://travis-ci.org/liquidz/misaki-markdown.png?branch=master)](https://travis-ci.org/liquidz/misaki-markdown)
 
 misaki-markdown is one of [misaki](http://liquidz.github.io/misaki/)'s compiler plugin.
 This compiler allows you to use misaki Markdown templates instead of S-exp templates.
