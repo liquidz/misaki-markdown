@@ -8,7 +8,7 @@
                  [misaki "0.2.6.2-beta"]
                  [cuma "0.0.4"]
                  [com.github.rjeschke/txtmark "0.8"]]
-  :dev-dependencies [clj-time "0.5.0"]
+  :dev-dependencies [[clj-time "0.5.0"]]
   :plugins [[codox "0.6.4"]]
 
   :repositories [["renejeschke-releases" "http://maven.renejeschke.de"]]
