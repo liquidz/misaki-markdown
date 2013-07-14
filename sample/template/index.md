@@ -20,6 +20,20 @@
 [&laquo; Prev page]($(prev-page))
 @(end)
 
+## Custom function
+
+* \_config.clj
+```
+:cuma { :extension "extension.clj" }
+```
+* template
+```
+$(hello "world")
+```
+* output
+$(hello "world")
+
+
 ## Template source
 ```
 ; @layout default
@@ -43,6 +57,12 @@
 @(if prev-page)
 [&laquo; Prev page]($(prev-page))
 @(end)
+
+## Custom function
+
+* _config.clj
+* template
+* output
 
 ## Template source
 

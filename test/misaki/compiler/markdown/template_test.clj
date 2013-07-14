@@ -103,7 +103,16 @@
     (is (= "<strong>hello world</strong>"
            (str/trim
              (#'misaki.compiler.markdown.template/render*
-                 ["<strong>hello $(msg)</strong>" {:markdown? "false"}] {:msg "world"}))))))
+                 ["<strong>hello $(msg)</strong>" {:markdown? "false"}] {:msg "world"})))))
+
+  (testing "custom extension should be work correctly."
+    (is (= "hello world"
+           (#'misaki.compiler.markdown.template/render*
+             ["$(hello msg)" {:markdown? "false"}] {:msg "world"})))
+
+    (is (= "WORLD"
+           (#'misaki.compiler.markdown.template/render*
+             ["$(upper msg)" {:markdown? "false"}] {:msg "world"})))))
 
 ;;; render-template
 (defcompilertest render-template-test

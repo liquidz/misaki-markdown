@@ -66,7 +66,9 @@
       nil   (:prev-page site)
       1     (count (:posts site))
       3     (count (:all-posts site))
-      "bar" (:foo site)))
+      "bar" (:foo site)
+      ;"baz" (-> site :extension :bar)
+      ))
 
   (bind-config [:url-base "/foo/"
                 :next-page "n", :prev-page "p"]

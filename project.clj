@@ -1,4 +1,4 @@
-(defproject misaki-markdown "0.0.1-beta"
+(defproject misaki-markdown "0.0.2-beta"
   :description "Markdown Compiler for Misaki"
   :url "http://liquidz.githumb.com/misaki-markdown/"
   :license {:name "Eclipse Public License"

@@ -6,7 +6,7 @@
                  [date     :refer :all]
                  [string   :refer :all]
                  [sequence :refer [get-prev-next]]]
-    [misaki [config :refer [*config*] :as cnf]
+    [misaki [config :refer [*config* *base-dir*] :as cnf]
             [core   :as msk]
             [server :as srv]]
     [clojure.string :as str]))
@@ -50,6 +50,15 @@
   "Make output filename from java.io.File."
   (comp md-extension->html-extension cnf/make-output-filename))
 
+; =load-extension-files
+(defn- load-extension-files
+  "Load cuma extension files."
+  [file]
+  (cond
+    (string? file)     (load-file (path *base-dir* file))
+    (sequential? file) (doseq [f file] (load-extension-files f))))
+
+
 ; =get-post-data
 (defn get-post-data
   "Get posts data."
@@ -92,6 +101,11 @@
 (defn -config
   "Custom configuration function called by misaki.core."
   [{:keys [template-dir] :as config}]
+
+  ;; load extension
+  (when-let [ext-file (some-> config :cuma :extension)]
+    (load-extension-files ext-file))
+
   (assoc config
          :layout-dir       (path template-dir (:layout-dir config DEFAULT_LAYOUT_DIR))
          :code-regexp      (:code-regexp config DEFAULT_CODE_REGEXP)

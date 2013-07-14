@@ -8,5 +8,6 @@
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
  :site { :fortest "markdown" }
+ :cuma { :extension "extension" }
  }
 

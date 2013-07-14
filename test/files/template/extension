@@ -1,0 +1,5 @@
+(ns cuma.extension.misaki.markdown.custom
+  (:require [clojure.string :as str]))
+
+(def hello #(str "hello " %2))
+(def upper #(str/upper-case %2))

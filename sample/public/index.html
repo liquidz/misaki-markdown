@@ -31,6 +31,15 @@
 <li><a href="/2022-02/bar.html">2022 02 02 - Libraries</a></li>
 </ul>
 <p><a href="/page2/index.md">Next page &raquo;</a></p>
+<h2>Custom function</h2>
+<ul>
+<li>_config.clj
+<pre><code>:cuma { :extension &quot;extension.clj&quot; }</code></pre></li>
+<li>template
+<pre><code>$(hello &quot;world&quot;)</code></pre></li>
+<li>output
+HELLO WORLD!!!</li>
+</ul>
 <h2>Template source</h2>
 <p><pre><code># [$(site-title)]($(root))
 
@@ -50,6 +59,12 @@
 @(if prev-page)
 [&amp;laquo; Prev page]($(prev-page))
 @(end)
+
+## Custom function
+
+* _config.clj
+* template
+* output
 
 ## Template source
 

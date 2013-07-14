@@ -9,6 +9,7 @@
 
  ; FOR TESTING
  :posts-per-page 1
- :site {:foo "bar"}
+ :site { :foo "bar" }
+ :cuma { :extension "extension" }
  }
 
